@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 
 import { useKeenSlider } from "keen-slider/react";
 
@@ -42,8 +42,10 @@ export default function Home({ products }: HomeProps) {
     </HomeContainer>
   );
 }
+//getServerSideProps - SSR: É usada para Server-Side Rendering. Isso significa que a página é gerada no lado do servidor a cada requisição.
+//getStaticProps - SSG: É usada para Static Site Generation. Isso significa que a página é gerada no momento da construção (build) do site e depois servida como um arquivo estático.
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const response = await stripe.products.list({
     expand: ["data.default_price"],
   });
@@ -62,5 +64,6 @@ export const getServerSideProps: GetServerSideProps = async () => {
     props: {
       products,
     },
+    revalidate: 60 * 60 * 2, // 2 horas
   };
 };
